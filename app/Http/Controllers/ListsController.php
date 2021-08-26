@@ -121,22 +121,32 @@ class ListsController extends Controller
      */
     public function storeBulk(Request $request)
     {
-        $lists = $request->get('lists');
+        $lists = $request->get('lists', []);
+    
+        if(empty($lists)) {
+            $lists = $this->request->get('items', []);
+        }
+    
         foreach ($lists as $list) {
-            if (!$list['title'] || !$list['slug']) {
+            if (!$list['title'] || empty($list['title'])) {
                 continue;
             }
-
+        
+            if(empty($list['slug'])) {
+                $list['slug'] = $list['title'];
+            }
+        
             $list = Lists::updateOrCreate(
-                ['slug' => sanitize_title($list['title'], 'display')],
+                ['slug' => sanitize_title($list['slug'], 'display')],
                 ['title' => sanitize_text_field($list['title'])]
             );
             do_action('fluentcrm_list_created', $list->id);
         }
-
+    
         return $this->sendSuccess([
             'message' => __('Provided Lists have been successfully created', 'fluent-crm')
         ]);
+    
     }
 
     /**
