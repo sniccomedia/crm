@@ -424,7 +424,7 @@ class AdminMenu
             'icons' => [
                 'trigger_icon' => fluentCrmMix('images/funnel_icons/trigger.svg')
             ],
-            'funnel_cat_icons' => [
+            'funnel_cat_icons' => apply_filters('fluent_crm_funnel_category_icons',[
                 'wordpresstriggers' => fluentCrmMix('images/funnel_icons/wordpress.svg'),
                 'woocommerce' => fluentCrmMix('images/funnel_icons/woocommerce.svg'),
                 'lifterlms' => fluentCrmMix('images/funnel_icons/lifterlms.svg'),
@@ -435,7 +435,7 @@ class AdminMenu
                 'restrictcontentpro' => fluentCrmMix('images/funnel_icons/restrictcontentpro.svg'),
                 'tutorlms' => fluentCrmMix('images/funnel_icons/tutorlms.svg'),
                 'wishlistmember' => fluentCrmMix('images/funnel_icons/wishlistmember.svg'),
-            ]
+            ])
         ));
     }
 
