@@ -302,6 +302,7 @@ function fluentcrm_update_subscriber_meta($subscriberId, $key, $value)
     return SubscriberMeta::create([
         'key'           => $key,
         'value'         => $value,
+        'created_by'    => get_current_user_id(),
         'subscriber_id' => $subscriberId,
         'created_at'    => fluentCrmTimestamp()
     ]);
