@@ -307,7 +307,7 @@ final class Application extends Container implements ArrayAccess
         $this->registerPath(FLUENTCRM_PLUGIN_PATH);
         $this->registerComponents(FLUENTCRM_PLUGIN_PATH);
         $this->requireCommonFilesForRequest($this);
-        load_plugin_textdomain('fluent-crm', false, 'fluent-crm/language/');
+        load_plugin_textdomain('fluent-crm', false, 'crm/language/');
     }
 
     private function setApplicationInstance($app)
