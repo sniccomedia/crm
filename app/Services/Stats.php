@@ -40,7 +40,7 @@ class Stats
                 'title' => __('Tags', 'fluent-crm'),
                 'count' => Tag::count(),
                 'route' => [
-                    'name' => 'lags'
+                    'name' => 'tags'
                 ]
             ],
             'total_templates'   => [
@@ -49,7 +49,7 @@ class Stats
                 'route' => [
                     'name' => 'templates'
                 ]
-            ]
+            ],
         ];
 
         $pendingEmails = CampaignEmail::whereIn('status', ['pending', 'scheduled', 'processing'])->count();
