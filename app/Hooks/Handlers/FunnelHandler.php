@@ -43,9 +43,10 @@ class FunnelHandler
 
         foreach ($triggers as $triggerName) {
             $argNum = apply_filters('fluentcrm_funnel_arg_num_' . $triggerName, 1);
+            $priority = apply_filters('fluentcrm_funnel_hook_priority' . $triggerName, 10);
             add_action($triggerName, function () use ($triggerName, $argNum) {
                 $this->mapTriggers($triggerName, func_get_args(), $argNum);
-            }, 10, $argNum);
+            }, $priority, $argNum);
         }
 
         add_action('fluentcrm_process_scheduled_tasks_init', function () {

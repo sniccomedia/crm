@@ -11,6 +11,8 @@ abstract class BaseTrigger
 
     protected $priority = 10;
 
+    protected $hook_priority;
+    
     public function __construct()
     {
         $this->register();
@@ -24,6 +26,12 @@ abstract class BaseTrigger
 
         add_action('fluentcrm_funnel_start_' . $this->triggerName, array($this, 'handle'), 10, 2);
 
+        add_filter('fluentcrm_funnel_hook_priority'. $this->triggerName, function ($priority) {
+            
+            return $this->hook_priority;
+            
+        },10, 1);
+        
         add_filter('fluentcrm_funnel_arg_num_' . $this->triggerName, function ($num) {
             if($num >= $this->actionArgNum) {
                 return $num;
