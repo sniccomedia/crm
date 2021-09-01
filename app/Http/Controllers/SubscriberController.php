@@ -510,15 +510,19 @@ class SubscriberController extends Controller
     {
         $contact = Subscriber::findOrFail($contactId);
         if ($contact->status != 'subscribed') {
-            $this->sendError([
+            
+            return $this->sendError([
                 'message' => __('Subscriber\'s status need to be subscribed.', 'fluent-crm')
             ]);
         }
-
-        add_action('wp_mail_failed', function ($wpError) {
-            $this->sendError([
+        
+        $error = null;
+        add_action('wp_mail_failed', function ($wpError) use (&$error) {
+            
+            $error = $this->sendError([
                 'message' => $wpError->get_error_message()
             ]);
+            
         }, 10, 1);
 
         $newCampaign = $request->get('campaign');
@@ -533,6 +537,10 @@ class SubscriberController extends Controller
 
         do_action('fluentcrm_process_contact_jobs', $contact);
 
+        if( $error instanceof \WP_REST_Response ) {
+            return $error;
+        }
+        
         return [
             'message' => __('Custom Email has been successfully sent', 'fluent-crm')
         ];
