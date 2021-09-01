@@ -161,9 +161,9 @@ class Handler
             if ($this->reachedEmailLimitPerSecond()) {
                 $this->restartWhenOneSecondExceeds();
             } else {
-                $response = Mailer::send($email->data());
+                $mail_sent_successfully = Mailer::send($email->data());
                 $this->dispatchedWithinOneSecond++;
-                if (is_wp_error($response)) {
+                if ( ! $mail_sent_successfully) {
                     $failedIds[] = $email->id;
                 } else {
                     CampaignEmail::where('id', $email->id)->whereNot('status', 'failed')->update([
@@ -351,7 +351,6 @@ class Handler
         Mailer::send($data);
         return true;
     }
-
 
     /**
      * Memory exceeded
