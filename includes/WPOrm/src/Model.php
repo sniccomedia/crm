@@ -88,7 +88,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     public static function registerModelEvent($event, $callback)
     {
         $calledClass = static::getCalledClassName();
-        static::$events["model.{$calledClass}.{$event}"] = $callback;
+        static::$events["model.{$calledClass}.{$event}"][] = $callback;
     }
 
     public static function retrieved($callback)
@@ -139,11 +139,19 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     public function fireModelEvent($event)
     {
         $calledClass = static::getCalledClassName();
-
         $eventName = "model.{$calledClass}.{$event}";
 
         if (isset(static::$events[$eventName])) {
-            return call_user_func(static::$events[$eventName], $this);
+    
+            foreach (static::$events[$eventName] as $callback) {
+                
+                $abort = call_user_func($callback, $this);
+                
+                if( $abort === false ) {
+                    return false;
+                }
+            }
+            
         }
     }
 
