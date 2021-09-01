@@ -6,6 +6,7 @@ use FluentCrm\App\Services\Helper;
 use FluentCrm\Includes\Helpers\Arr;
 use FluentCrm\Includes\Mailer\Handler;
 use WPManageNinja\WPOrm\ModelCollection;
+
 use function Clue\StreamFilter\fun;
 
 class Subscriber extends Model
@@ -846,10 +847,26 @@ class Subscriber extends Model
         }
         return false;
     }
-
+    
+    public function hasAllTagIds($tagIds)
+    {
+        
+        $tagIds = is_array($tagIds) ? $tagIds : [$tagIds];
+        
+        $actual_tag_ids = $this->tags->pluck('id');
+        
+        foreach ($tagIds as $tag_id) {
+            if ( ! in_array($tag_id, $actual_tag_ids)) {
+                return false;
+            }
+        }
+        return true;
+        
+    }
+    
     public function hasAnyListId($listIds)
     {
-        if (!$listIds || !is_array($listIds)) {
+        if ( ! $listIds || ! is_array($listIds)) {
             return false;
         }
         foreach ($this->lists as $list) {
@@ -859,15 +876,31 @@ class Subscriber extends Model
         }
         return false;
     }
-
+    
+    public function hasAllListIds($listIds)
+    {
+        
+        $listIds = is_array($listIds) ? $listIds : [$listIds];
+        
+        $actual_list_ids = $this->lists->pluck('id');
+        
+        foreach ($listIds as $list_id) {
+            if ( ! in_array($list_id, $actual_list_ids)) {
+                return false;
+            }
+        }
+        return true;
+        
+    }
+    
     public function updateMeta($metaKey, $metaValue, $objectType)
     {
         $exist = $this->meta()
-            ->where('key', $metaKey)
-            ->where('object_type', $objectType)
-            ->first();
-
-        if($exist) {
+                      ->where('key', $metaKey)
+                      ->where('object_type', $objectType)
+                      ->first();
+        
+        if ($exist) {
             $exist->value = $metaValue;
             $exist->save();
             return true;
