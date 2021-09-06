@@ -11,10 +11,13 @@ use FluentCrm\App\Services\Funnel\FunnelHelper;
 
 class SendEmailAction extends BaseAction
 {
+    
+    protected $actionName = 'send_custom_email';
+    
+    protected $priority = 10;
+    
     public function __construct()
     {
-        $this->actionName = 'send_custom_email';
-        $this->priority = 10;
         parent::__construct();
         add_filter('fluentcrm_funnel_sequence_saving_' . $this->actionName, array($this, 'savingAction'), 10, 2);
         add_filter('fluentcrm_funnel_sequence_deleting_' . $this->actionName, array($this, 'deleteAction'), 10, 2);
@@ -151,21 +154,27 @@ class SendEmailAction extends BaseAction
         }
     }
 
-    public function handle($subscriber, $sequence, $funnelSubscriberId, $funnelMetric)
-    {
+    protected function getCampaign($sequence, $funnelSubscriberId) {
+    
         $settings = $sequence->settings;
         $refCampaign = Arr::get($settings, 'reference_campaign');
         if(!$refCampaign) {
             FunnelHelper::changeFunnelSubSequenceStatus($funnelSubscriberId, $sequence->id, 'skipped');
+            return null;
+        }
+    
+        return FunnelCampaign::find($refCampaign);
+    }
+    
+    public function handle($subscriber, $sequence, $funnelSubscriberId, $funnelMetric)
+    {
+       
+        if(!$campaign = $this->getCampaign($sequence, $funnelSubscriberId)) {
             return;
         }
 
-        $campaign = FunnelCampaign::find($refCampaign);
-
-        if(!$campaign) {
-            return;
-        }
-
+        $settings = $sequence->settings;
+        
         $scheduledAt = current_time('mysql');
         if(Arr::get($settings, 'is_scheduled') == 'yes') {
             $providedDate = Arr::get($settings, 'scheduled_at');
