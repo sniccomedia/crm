@@ -2,7 +2,6 @@
 
 namespace FluentCrm\App\Hooks\Handlers;
 
-use FluentCrm\App\Models\Lists;
 use FluentCrm\App\Models\Webhook;
 use FluentCrm\App\Services\Helper;
 use FluentCrm\Includes\Helpers\Arr;
@@ -719,24 +718,7 @@ class ExternalPages
 
     private function getPublicLists()
     {
-        $emailSettings = Helper::getGlobalEmailSettings();
-        $lists = [];
-        $preListType = Arr::get($emailSettings, 'pref_list_type', 'none');
-        if ($preListType == 'filtered_only') {
-            $prefListItems = Arr::get($emailSettings, 'pref_list_items', []);
-            if ($prefListItems) {
-                $lists = Lists::whereIn('id', $prefListItems)->get();
-                if ($lists->isEmpty()) {
-                    return [];
-                }
-            }
-        } else if ($preListType == 'all') {
-            $lists = Lists::get();
-            if ($lists->isEmpty()) {
-                return [];
-            }
-        }
-        return $lists;
+        return Helper::getPublicLists();
     }
 
     private function extractEmail($from_email)
