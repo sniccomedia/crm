@@ -3650,12 +3650,12 @@ msgstr "Neuer Abonnentenstatus"
 #: app/Services/Funnel/Triggers/UserRegistrationTrigger.php:23
 #, fuzzy
 msgid "New User Sign Up"
-msgstr "Anmeldung für neue Benutzer"
+msgstr "Benutzer Registrierung"
 
 #: app/Services/Funnel/Triggers/UserRegistrationTrigger.php:38
 #, fuzzy
 msgid "New User Sign Up Funnel"
-msgstr "Anmelde-Trichter für neue Benutzer"
+msgstr "Trigger für eine Benutzer Registrierung"
 
 #: app/Hooks/Handlers/CountryNames.php:641
 #, fuzzy
