@@ -81,7 +81,8 @@ class FunnelHelper
     public static function ifAlreadyInFunnel($funnelId, $subscriberId)
     {
         return FunnelSubscriber::where('funnel_id', $funnelId)
-            ->where('subscriber_id', $subscriberId)
+                               ->where('subscriber_id', $subscriberId)
+                               ->whereNot('status', 'completed')
             ->first();
     }
 
